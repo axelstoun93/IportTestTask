@@ -75,7 +75,7 @@ class LoadProductService
         $this->loadProduct = $productCount;
     }
 
-    public function deactiveProductNotXmlFile(array $productCodeArray, Product $modelProduct): int
+    public function deactivateProductNotXmlFile(array $productCodeArray, Product $modelProduct): int
     {
         $result = $modelProduct->whereNotIn('product_code', $productCodeArray)->update(
             ['active' => $modelProduct::ACTIVE_OFF]

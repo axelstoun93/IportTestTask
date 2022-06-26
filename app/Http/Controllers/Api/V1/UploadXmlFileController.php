@@ -37,7 +37,7 @@ class UploadXmlFileController extends Controller
         $filePatch = $request->file('file')->getPathname();
         $this->xmlParser->loadFile($filePatch);
         $codeProduct = $this->loadService->update($this->apiIport,$this->xmlParser,$this->productModel);
-        $this->loadService->deactiveProductNotXmlFile($codeProduct,$this->productModel);
+        $this->loadService->deactivateProductNotXmlFile($codeProduct,$this->productModel);
 
         $loadProductFile = $this->loadService->getCountProduct();
         $activeProduct = $this->productModel->getActiveProduct();
