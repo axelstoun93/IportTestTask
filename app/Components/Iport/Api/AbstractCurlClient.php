@@ -3,7 +3,6 @@ namespace App\Components\Iport\Api;
 
 use App\Components\Iport\Api\Data\SourceInterface;
 use App\Components\Iport\Api\Entity\IportRequest;
-use App\Components\Iport\Api\Entity\IportResponse;
 use App\Components\Iport\Api\Exception\IportCurlException;
 
 /**
@@ -111,8 +110,17 @@ class AbstractCurlClient implements SourceInterface
     public function decodeData(string $response): array
     {
         if(!empty($response)){
-            return json_decode($response, true);
-        }
+
+                $result = json_decode($response, true);
+
+                if(!is_array($result)){
+                    $this->closeCurlConnection();
+                    $api = IportRequest::IPORT_API_URL;
+                    throw new IportCurlException("Сейчас слишком много запросов к $api , повторите загрузку файла!");
+                }
+                return $result;
+            }
+
         return [];
     }
 

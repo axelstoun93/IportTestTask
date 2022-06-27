@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Components\Iport\Api\Exception\IportCurlException;
 use App\Components\Iport\Api\Iport;
 use App\Components\Iport\Api\IportMultiCurl;
 use App\Components\Iport\Parser\IportXmlProductParser;
@@ -34,6 +35,7 @@ class UploadXmlFileController extends Controller
      */
     public function store(UploadXmlRequest $request)
     {
+
         try {
 
         $filePatch = $request->file('file')->getPathname();
@@ -47,8 +49,14 @@ class UploadXmlFileController extends Controller
                                         'message' => "Добавлено, обновлено $loadProductFile продуктов, из них активировано $activeProduct",
                                     ], 200);
         } catch (\Exception $exception) {
+
+            $message = 'Ошибка при обновлении продуктов, повторите попытку';
+            if($exception instanceof IportCurlException){
+                $message = $exception->getMessage();
+            }
+
             return response()->json([
-                                        'message' => 'Ошибка при обновлении продуктов, повторите попытку'
+                                        'message' =>  $message
                                     ], 500);
         }
     }

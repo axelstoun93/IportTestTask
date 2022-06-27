@@ -2,7 +2,6 @@
 namespace App\Components\Iport\Api;
 
 use App\Components\Iport\Api\Entity\IportRequest;
-use App\Components\Iport\Api\Entity\IportResponse;
 use App\Components\Iport\Api\Exception\IportCurlException;
 
 /**
@@ -92,6 +91,7 @@ class IportMultiCurl extends AbstractCurlClient
 
             $responseInfo = curl_getinfo($curl);
             $responseContent = curl_multi_getcontent($curl);
+            curl_multi_remove_handle($this->multiCurl,$curl);
             curl_close($curl);
 
             $response[] = $this->iportResponseFactory->create(
