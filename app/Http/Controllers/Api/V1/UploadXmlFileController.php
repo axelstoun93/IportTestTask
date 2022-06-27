@@ -34,23 +34,21 @@ class UploadXmlFileController extends Controller
      */
     public function store(UploadXmlRequest $request)
     {
+        try {
+
         $filePatch = $request->file('file')->getPathname();
         $this->xmlParser->loadFile($filePatch);
         $codeProduct = $this->loadService->update($this->apiIport,$this->xmlParser,$this->productModel);
         $this->loadService->deactivateProductNotXmlFile($codeProduct,$this->productModel);
-
         $loadProductFile = $this->loadService->getCountProduct();
         $activeProduct = $this->productModel->getActiveProduct();
 
-
-
-        try{
             return response()->json([
                                         'message' => "Добавлено, обновлено $loadProductFile продуктов, из них активировано $activeProduct",
-                                    ],200);
-        }catch (\Exception $exception){
+                                    ], 200);
+        } catch (\Exception $exception) {
             return response()->json([
-                                        'message' => 'Ошибка при обновлении продуктов'
+                                        'message' => 'Ошибка при обновлении продуктов, повторите попытку'
                                     ], 500);
         }
     }
